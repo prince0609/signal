@@ -72,8 +72,7 @@ def fetch_daily_data(symbol: str, days: int = None, use_cache: bool = True) -> p
 
 def fetch_delivery_data(symbol: str, days: int = None) -> float:
     """
-    Fetch average delivery percentage for a stock.
-    Returns average delivery % over last N days, or None if unavailable.
+    Fetch average delivery percentage for a stock from local database.
     """
     if days is None:
         days = DELIVERY_LOOKBACK_DAYS
@@ -84,42 +83,22 @@ def fetch_delivery_data(symbol: str, days: int = None) -> float:
         return cached
 
     try:
-        from nsepython import deliverable_position_data
-        end_date = datetime.now()
-        start_date = end_date - timedelta(days=days)
-
-        df = deliverable_position_data(
-            symbol,
-            date_to_nse_format(start_date),
-            date_to_nse_format(end_date),
-        )
-
+        from database import get_db_connection
+        with get_db_connection() as conn:
+            query = '''
+            SELECT delivery_pct 
+            FROM daily_data 
+            WHERE symbol = ? 
+            ORDER BY date DESC 
+            LIMIT ?
+            '''
+            df = pd.read_sql_query(query, conn, params=(symbol, days))
+            
         if df is None or df.empty:
             return None
 
-        # Find the delivery percentage column (name varies)
-        del_col = None
-        for col in df.columns:
-            col_lower = col.lower()
-            if "deliv" in col_lower and ("traded" in col_lower or "%" in col_lower):
-                del_col = col
-                break
-
-        if del_col is None:
-            # Try alternative column names
-            for col in df.columns:
-                if "COP_DELIV" in col.upper():
-                    del_col = col
-                    break
-
-        if del_col is None:
-            return None
-
-        values = pd.to_numeric(df[del_col], errors="coerce").dropna()
-        if values.empty:
-            return None
-
-        avg = float(values.mean())
+        # Return mean delivery %
+        avg = float(df['delivery_pct'].mean())
         cache_set(symbol, "delivery", avg)
         return avg
 

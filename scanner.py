@@ -116,9 +116,14 @@ def run_scan(universe: str = "nifty50", min_score: int = 0, skip_delivery: bool 
         msg = f"<b>🚀 Daily Stock Scan - {datetime.now().strftime('%d %b %Y')}</b>\n\n"
         for s in top_5:
             msg += f"<b>{s['ticker']}</b> (Score: {s['score']})\n"
-            msg += f"Price: ₹{s['price']:,.2f} | Category: {s['category']}\n"
-            msg += f"Target 1: ₹{s['target1']:,.2f} (+{s['t1_pct']}%)\n"
-            msg += f"Stop Loss: ₹{s['stop_loss']:,.2f} (-{s['sl_pct']}%)\n"
+            msg += f"Price: ₹{s['price']:,.2f} | {s['category']} | {s['tier']}\n"
+            msg += f"<b>RSI:</b> {s['rsi']:.0f} | <b>MACD:</b> {'Bullish' if s['macd_bullish'] else 'Bearish'}\n"
+            msg += f"<b>HMA55:</b> ₹{s['hma55']:,.2f} (Dist: {s['distance_pct']}%)\n"
+            msg += f"<b>Tgt:</b> ₹{s['target1']:,.2f} / ₹{s['target2']:,.2f}\n"
+            msg += f"<b>SL:</b> ₹{s['stop_loss']:,.2f} ({s['sl_pct']}% Risk)\n"
+            cautions = ", ".join(s.get("caution_flags", []))
+            if cautions:
+                msg += f"⚠️ <i>{cautions}</i>\n"
             msg += "-------------------\n"
         
         send_telegram_message(msg)

@@ -1,0 +1,20 @@
+nse_history.db
+nse_history.db
+.cache/
+# Virtual Environment (Thousands of files here)
+myenv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local Data (The large file)
+nse_history.db
+.cache/
+
+# IDE files
+.vscode/
+.idea/

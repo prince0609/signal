@@ -123,9 +123,9 @@ def process_date(date_obj: datetime, session: requests.Session) -> bool:
         
     return False
 
-def sync_database(days_back: int = 400):
+def sync_database(days_back: int = 600):
     """
-    Downloads all missing dates up to `days_back` into SQLite. 400 days covers approx 270 trading days.
+    Downloads all missing dates up to `days_back` into SQLite. 600 days covers approx 410 trading days.
     """
     end_date = datetime.now()
     start_date = end_date - timedelta(days=days_back)
@@ -162,10 +162,10 @@ def sync_database(days_back: int = 400):
 
     console.print(f"[bold green]Data synchronized successfully! Downloaded {successful_days} trading days.[/bold green]")
     
-    # Keep DB lean: Delete data older than 410 trading days
-    removed = cleanup_old_data(410)
+    # Keep DB lean: Delete data older than 600 trading days
+    removed = cleanup_old_data(600)
     if removed > 0:
         console.print(f"[dim]Cleaned up old records from database.[/dim]")
 
 if __name__ == "__main__":
-    sync_database(5)
+    sync_database(600)

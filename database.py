@@ -49,7 +49,7 @@ def get_db_size():
         return os.path.getsize(DB_PATH) / (1024 * 1024)
     return 0.0
 
-def cleanup_old_data(days_to_keep: int = 410):
+def cleanup_old_data(days_to_keep: int = 600):
     """
     Deletes records older than the last N distinct trading dates to keep the DB size lean.
     """
@@ -70,6 +70,6 @@ def cleanup_old_data(days_to_keep: int = 410):
 if __name__ == "__main__":
     init_db()
     print("Database initialized successfully.")
-    removed = cleanup_old_data(410)
+    removed = cleanup_old_data(600)
     if removed > 0:
         print(f"Cleaned up {removed} old records.")

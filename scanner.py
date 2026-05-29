@@ -66,8 +66,8 @@ def run_scan(universe: str = "nifty50", min_score: int = 0, skip_delivery: bool 
 
                 # Resample to weekly
                 weekly_df = resample_to_weekly(daily_df)
-                # Require a minimum number of weekly candles (lowered to 50 to match available history)
-                if weekly_df is None or len(weekly_df) < 50:
+                # Require a minimum number of weekly candles (lowered to 20 to allow newer stocks)
+                if weekly_df is None or len(weekly_df) < 20:
                     skipped.append(symbol)
                     progress.advance(task)
                     continue

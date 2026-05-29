@@ -28,7 +28,7 @@ HIGH_CONVICTION_MIN = 7
 WATCHLIST_MIN = 4
 
 # ─── Data Fetching ──────────────────────────────────────────────
-DAILY_DATA_DAYS = 500  # ~1.5 years for weekly HMA55
+DAILY_DATA_DAYS = 600  # ~2 years for weekly HMA55
 CHUNK_SIZE_DAYS = 35   # NSE API limit per request
 REQUEST_DELAY = 0.5    # seconds between API requests
 DELIVERY_LOOKBACK_DAYS = 30
